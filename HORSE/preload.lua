@@ -1,8 +1,17 @@
 if host:isHost() and avatar:getPermissionLevel() ~= "MAX" then figuraMetatables.HostAPI.__index.isHost = function()return false end end
+local config = {
+    folder = "folderName",       -- Name of the folder within the data folder to load from
+    initScript = "init",         -- Script to require when HORSE loaded
+    stage2 = "@preloadStage2",   -- Name of the second part of the HORSE
+    scripts_per_tick = 25,       -- Amount of scripts to require from HORSE per tick
+    debug = 0                    -- Minimum amount of time for entry to be logged. 0 to disable.
+}
+
 if not host:isHost() then
     HORSE = setmetatable({}, {__index = function() error("HORSE accessed outside of host-only context!") end})
     HORSE._events = {}
     HORSE.Event = {}
+    HORSE.config = config
     HORSE.Loaded = true
     setmetatable(HORSE.Event, {
         __newindex = function(self, key, value) 
@@ -22,7 +31,7 @@ if not host:isHost() then
         end
     })
     function events.ENTITY_INIT() HORSE.Event.ENTITY_INIT() end
-    return require "scripts.init"
+    return require(config.initScript)
 end
 
 local scripts = listFiles("", true)
@@ -40,13 +49,7 @@ for index, value in ipairs(scripts) do
     end
 end
 HORSE = {}
-HORSE.config = {
-    folder = "folderName",       -- Name of the folder within the data folder to load from
-    initScript = "init",         -- Script to require when HORSE loaded
-    stage2 = "@preloadStage2",   -- Name of the second part of the HORSE
-    scripts_per_tick = 25,       -- Amount of scripts to require from HORSE per tick
-    debug = 0                    -- Minimum amount of time for entry to be logged. 0 to disable.
-}
+HORSE.config = config
 
 function __HORSE__Bail(text) 
     printJson(toJson {
