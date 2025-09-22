@@ -37,7 +37,7 @@ sudo mount --bind /path/to/figura/avatars/folderName /path/to/figura/data/folder
 You can use a junction:
 ```cmd
 cd path\to\figura
-mklink /j .\avatars\folder .\data\folderName
+mklink /j .\data\folder .\avatars\folderName
 ``` 
 *(if a windows user could triple check if that's right, i'd appreciate it)*
 
